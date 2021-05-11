@@ -33,18 +33,31 @@ class TcpServer:
         self.connections = {}
 
     def listen_for_connections(self, connection_limit: int = 999): #TODO: Implement another stop condition
-        """Listen for clients trying to connect, wait until a certain amount of clients has connected.
+        """Listen for clients trying to connect, wait until a certain amount of clients has connected
+        or the user interrupts by keyboard interrupt.
         Assign connections to self.connections.
+
+
+        Outputs some information to the screen when a Client connects.
 
         Args:
             connection_limit: amount of clients that are expected to connect.
         """
+        self.main_socket.settimeout(1.0)
         self.main_socket.listen(5)
-        while True:
-            c_socket, address = self.main_socket.accept()
-            self.connections[address] = c_socket
-            if len(self.connections) >= connection_limit:
-                break
+        try:
+            while True:
+                try:
+                    c_socket, address = self.main_socket.accept()
+                    print(f"{address[0]}:{address[1]} connected.")
+                    self.connections[address] = c_socket
+                    if len(self.connections) >= connection_limit:
+                        break
+                except socket.timeout:
+                    pass
+        except KeyboardInterrupt:
+            pass
+        self.main_socket.setblocking(True)
 
     def send(self, address: str, content):
         """Send something to a connected client at a certain address.
@@ -67,3 +80,9 @@ class TcpServer:
             content: whatever should be sent."""
         for address in self.connections.keys():
             self.send(address, content)
+
+
+a = TcpServer(33333)
+a.listen_for_connections(2)
+a.send_all("abcde")
+b = input("<DONE>")
