@@ -32,7 +32,7 @@ class TcpServer:
         self.main_socket.bind(('', port))
         self.connections = {}
 
-    def listen_for_connections(self, connection_limit: int = 999): #TODO: Implement another stop condition
+    def listen_for_connections(self, connection_limit: int = 999):
         """Listen for clients trying to connect, wait until a certain amount of clients has connected
         or the user interrupts by keyboard interrupt.
         Assign connections to self.connections.
