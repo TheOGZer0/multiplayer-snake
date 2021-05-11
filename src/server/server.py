@@ -80,9 +80,3 @@ class TcpServer:
             content: whatever should be sent."""
         for address in self.connections.keys():
             self.send(address, content)
-
-
-a = TcpServer(33333)
-a.listen_for_connections(2)
-a.send_all("abcde")
-b = input("<DONE>")
